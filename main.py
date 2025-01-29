@@ -75,4 +75,8 @@ def download_all() -> None:
         issue_object.download(download_folder)
 
 
-download_all()
+if __name__ == '__main__':
+    download_all()
+
+    # To download a single issue:
+    # Issue(149).download(download_folder)
