@@ -72,7 +72,7 @@ latest_issue: int = 149  # as of 29/1/25
 
 def download_all() -> None:
     """Download all MagPi PDFs."""
-    for issue in range(1, latest_issue):
+    for issue in range(1, latest_issue+1):
         issue_object: Issue = Issue(issue)
         issue_object.download(download_folder)
 
