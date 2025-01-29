@@ -67,6 +67,7 @@ class Issue:
         return f'https://magpi.raspberrypi.com/issues/{self.issue_number}/pdf/download'
 
 
+# TODO find the latest_issue by reading the top item at https://magpi.raspberrypi.com/issues
 latest_issue: int = 149  # as of 29/1/25
 
 
