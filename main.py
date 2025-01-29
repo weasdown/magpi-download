@@ -24,9 +24,6 @@ class Issue:
         :rtype: NoneType
         """
 
-        print(f'\nIssue {self.issue_number}:')
-        print(f'\t- Downloading from {self.url}')
-
         magpi_root_url: str = 'https://magpi.raspberrypi.com'
 
         response: requests.Response = requests.get(self.url)
@@ -47,9 +44,9 @@ class Issue:
             # Save the PDF to a file
             with open(os.path.join(save_folder, self.file_name), 'wb') as file:
                 file.write(download.content)
-            print(f'\t- Issue {self.issue_number} downloaded successfully')
+            print(f'Issue {self.issue_number} downloaded successfully')
         else:
-            print(f'\t- Failed to download issue {self.issue_number}! Status code: {response.status_code}')
+            print(f'\n!! Failed to download issue {self.issue_number}. Status code: {response.status_code}')
 
     @property
     def file_name(self)->str:
