@@ -100,7 +100,7 @@ if __name__ == '__main__':
         os.mkdir(download_folder)
 
     latest: int = latest_issue()  # TODO remove
-    print(f'The latest issue is {latest}.')
+    print(f'The latest issue is {latest}.\n')
 
     download_all()
 
