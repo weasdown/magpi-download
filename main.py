@@ -5,9 +5,10 @@ import json
 import os
 from pathlib import Path
 import requests
+import sys
 
-download_folder: Path = Path(r'D:\Resources\Raspberry Pi magazines\MagPi')
-
+# download_folder: Path = Path(r'')
+download_folder: Path = Path(r'D:\Resources\Raspberry Pi magazines\MagPi') if sys.platform == 'win32' else Path('MagPis')
 
 class Issue:
     def __init__(self, issue_number: int):
@@ -76,6 +77,9 @@ def download_all() -> None:
 
 
 if __name__ == '__main__':
+    if not os.path.exists(download_folder):
+        os.mkdir(download_folder)
+
     download_all()
 
     # To download a single issue:
