@@ -91,7 +91,7 @@ def latest_issue() -> int:
 
 def download_all() -> None:
     """Download all MagPi PDFs."""
-    for issue in range(1, latest_issue()+1):
+    for issue in range(1, latest+1):
         Issue(issue).download(download_folder)
 
 
