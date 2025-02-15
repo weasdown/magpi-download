@@ -84,7 +84,7 @@ def latest_issue() -> int:
     print(type(link_tags[0]))
     
     # Remove leading "/issues/" and trailing "/pdf" from each link in which they appear, leaving just the issue number that we then make an int.
-    issue_nums: list[int] = [int(link.replace('/issues/', '').replace('/pdf', '')) for link in link_hrefs if link.startswith('/issues/')]
+    issue_nums: list[int] = [int(link.replace('/issues/', '').replace('/pdf', '')) for link in link_tags if link.startswith('/issues/')]
 
     # Remove duplicate issue numbers and sort ascending
     issue_nums: list[int] = list(set(issue_nums))
