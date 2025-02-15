@@ -71,6 +71,13 @@ def latest_issue() -> int:
     latest: int = 149  # as of 29/1/25
 
     # TODO add BeautifulSoup getting of latest issue number
+    url: str = 'https://magpi.raspberrypi.com/issues'
+    
+    # Parse HTML soup with BeautifulSoup.
+    soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+
+    # TODO Search soup for "The MagPi issue [issue number] out now!"
+    print(soup)
 
     return latest
 
