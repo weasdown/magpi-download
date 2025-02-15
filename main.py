@@ -79,8 +79,7 @@ def latest_issue() -> int:
 def download_all(save_path: Path) -> None:
     """Download all MagPi PDFs."""
     for issue in range(1, latest_issue()+1):
-        issue_object: Issue = Issue(issue)
-        issue_object.download(download_folder)
+        Issue(issue).download(download_folder)
 
 
 if __name__ == '__main__':
