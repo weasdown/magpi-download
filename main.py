@@ -7,8 +7,10 @@ from bs4 import BeautifulSoup
 import os
 from pathlib import Path
 import requests
+import sys
 
 help_description = "A Python program to download free PDFs of Raspberry Pi's MagPi magazine."
+
 
 class Issue:
     def __init__(self, issue_number: int):
@@ -92,8 +94,10 @@ if __name__ == '__main__':
     # Read arguments from command line
     args = parser.parse_args()
 
-    default_download_folder: Path =Path(r'D:\Resources\Raspberry Pi magazines\MagPi')
+    default_download_folder: Path = Path('MagPis')
     download_folder: Path = Path(args.path) if args.path is not None else default_download_folder
+    if not os.path.exists(download_folder):
+        os.mkdir(download_folder)
 
     issue_num: int | None = args.issue
 
