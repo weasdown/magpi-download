@@ -72,6 +72,8 @@ def latest_issue() -> int:
     """Gets the number of the latest issue."""
     url: str = 'https://magpi.raspberrypi.com/issues'
     
+    # TODO refactor to use link on page that says "The MagPi issue [latest] out now!". Will mean links can be filtered earlier, so quicker to run.
+
     # Parse HTML soup with BeautifulSoup.
     soup = BeautifulSoup(requests.get(url).content, 'html.parser')
 
