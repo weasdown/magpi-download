@@ -40,6 +40,7 @@ class Issue:
             try:
                 download_href: str = [link for link in link_hrefs if link.startswith('/downloads/')][0]
             except IndexError as ie:
+                # TODO get date that issue will be available from button that replaces "No thanks, take me to the free PDF" link if not available e.g. https://magpi.raspberrypi.com/issues/150/contributions/new
                 raise ValueError(f'No download is available for issue {self.issue_number}')
 
             download_url: str = magpi_root_url + download_href  # Build the PDF download URL.
@@ -79,7 +80,8 @@ def latest_issue() -> int:
 
     # Search soup for links (hrefs) that include "/issues/[issue number]" in their URL.
     # Get all the hrefs in the page.
-    link_hrefs: list[str] = [link.get('href') for link in soup.find_all('a')]
+    link_tags: list[BeautifulSoup.element.Tag] = soup.find_all('a')
+    print(type(link_tags[0]))
     
     # Remove leading "/issues/" and trailing "/pdf" from each link in which they appear, leaving just the issue number that we then make an int.
     issue_nums: list[int] = [int(link.replace('/issues/', '').replace('/pdf', '')) for link in link_hrefs if link.startswith('/issues/')]
