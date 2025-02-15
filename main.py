@@ -70,7 +70,9 @@ class Issue:
 
 
 # TODO find the latest_issue by reading the top item at https://magpi.raspberrypi.com/issues
-latest_issue: int = 149  # as of 29/1/25
+def latest_issue() -> int:
+    """Gets the latest issue number."""
+    return 149  # as of 29/1/25
 
 
 def download_all(save_path: Path) -> None:
