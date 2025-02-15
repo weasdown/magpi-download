@@ -69,6 +69,9 @@ class Issue:
 def latest_issue() -> int:
     """Gets the latest issue number."""
     latest: int = 149  # as of 29/1/25
+
+    # TODO add BeautifulSoup getting of latest issue number
+
     return latest
 
 
