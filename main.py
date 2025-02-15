@@ -40,7 +40,7 @@ class Issue:
             try:
                 download_href: str = [link for link in link_hrefs if link.startswith('/downloads/')][0]
             except IndexError as ie:
-                raise RuntimeError(f'No download is available for issue {self.issue_number}')
+                raise ValueError(f'No download is available for issue {self.issue_number}')
 
             download_url: str = magpi_root_url + download_href  # Build the PDF download URL.
             download: requests.Response = requests.get(download_url)  # Download the PDF.
