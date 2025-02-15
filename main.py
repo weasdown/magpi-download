@@ -102,7 +102,11 @@ if __name__ == '__main__':
     latest: int = latest_issue()  # TODO remove
     print(f'The latest issue is {latest}.\n')
 
-    download_all()
+    # To download all issues:
+    # download_all()
 
-    # To download a single issue:
+    # To download a single issue, where 149 is the issue number:
     # Issue(149).download(download_folder)
+
+    # To download only the latest issue:
+    Issue(latest).download(download_folder)
