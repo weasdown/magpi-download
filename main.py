@@ -82,6 +82,8 @@ if __name__ == '__main__':
     if not os.path.exists(download_folder):
         os.mkdir(download_folder)
 
+    print('download_all() would now be called')
+    sys.exit(0)  # TODO remove print and sys.exit()
     download_all()
 
     # To download a single issue:
