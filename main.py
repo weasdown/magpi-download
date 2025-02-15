@@ -85,6 +85,8 @@ if __name__ == '__main__':
     if not os.path.exists(download_folder):
         os.mkdir(download_folder)
 
+    latest: int = latest_issue()  # TODO remove
+
     print('download_all() would now be called')
     sys.exit(0)  # TODO remove print and sys.exit()
     download_all()
