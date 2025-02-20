@@ -8,5 +8,5 @@ To download all the MagPi magazines, make sure you have [Python](https://python.
 2. `cd magpi-download`
 3. `python -m venv .venv`
 4. If on Windows: `./.venv/Scripts/activate.bat`, or on Linux/macOS: `source .venv/bin/activate`
-5. `pip install -r requirements.txt`
+5. `pip install -U -r requirements.txt`
 6. `python main.py`
