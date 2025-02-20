@@ -16,7 +16,7 @@ To view available commands, run: `python main.py -h` or `python main.py --help`.
 
 ### Downloading magazines
 The magazine PDFs will be downloaded to a folder called `MagPis` inside the cloned `magpi-download` folder.
-- To download all the MagPi magazines, run: `python main.py`.
+- To download all the MagPi magazines, run: `python main.py`. At the time of writing (Feb 20th, 2025), downloading all 150 available issues takes 3.8 GB of disk space.
 - To download a single issue, specify its number with the `-i` parameter, run: `python main.py -i 150`.
 - To set the folder that the magazines will download to (`MagPis` by default), use the `-p` parameter, being sure to   wrap the folder name in quotes. For examples, to download to a folder called "issues", run: `python main.py -p "issues"`.
 
