@@ -1,7 +1,7 @@
 # Program to automatically download every issue of Raspberry Pi's MagPi magazine.
 
 from bs4 import BeautifulSoup
-import json
+import json  # TODO remove import if not required
 import os
 from pathlib import Path
 import requests
