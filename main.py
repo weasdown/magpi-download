@@ -74,7 +74,7 @@ latest_issue: int = 149  # as of 29/1/25
 def download_all(save_path: Path) -> None:
     """Download all MagPi PDFs."""
     for issue in range(1, latest_issue+1):
-        Issue(issue).download(save_path)        
+        Issue(issue).download(save_path)
 
 
 if __name__ == '__main__':
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     # Read arguments from command line
     args = parser.parse_args()
 
-    default_download_folder: Path = Path('MagPi')
+    default_download_folder: Path = Path('MagPis')
     download_folder: Path = Path(args.path) if args.path is not None else default_download_folder
     if not os.path.exists(download_folder):
         print(f'\t- Directory {download_folder} does not exist - making it...')
