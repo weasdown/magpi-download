@@ -78,10 +78,6 @@ def download_all(save_path: Path) -> None:
 
 
 if __name__ == '__main__':
-    download_folder: Path = Path('D:/Resources/Raspberry Pi magazines/MagPi') if sys.platform == 'win32' else Path('MagPis')
-    if not os.path.exists(download_folder):
-        os.mkdir(download_folder)
-
     # Initialize parser
     parser = argparse.ArgumentParser(description=help_description)
 
@@ -97,7 +93,7 @@ if __name__ == '__main__':
     # Read arguments from command line
     args = parser.parse_args()
 
-    default_download_folder: Path =Path('MagPi')
+    default_download_folder: Path = Path('MagPi')
     download_folder: Path = Path(args.path) if args.path is not None else default_download_folder
     if not os.path.exists(download_folder):
         print(f'\t- Directory {download_folder} does not exist - making it...')
