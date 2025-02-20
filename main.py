@@ -1,14 +1,16 @@
 # Program to automatically download every issue of Raspberry Pi's MagPi magazine.
 
+import argparse
+from argparse import ArgumentError
+
 from bs4 import BeautifulSoup
-import json
+import json  # TODO remove import if not required
 import os
 from pathlib import Path
 import requests
 import sys
 
-# download_folder: Path = Path(r'')
-download_folder: Path = Path(r'D:\Resources\Raspberry Pi magazines\MagPi') if sys.platform == 'win32' else Path('MagPis')
+help_description = "A Python program to download free PDFs of Raspberry Pi's MagPi magazine."
 
 class Issue:
     def __init__(self, issue_number: int):
@@ -69,18 +71,46 @@ class Issue:
 latest_issue: int = 149  # as of 29/1/25
 
 
-def download_all() -> None:
+def download_all(save_path: Path) -> None:
     """Download all MagPi PDFs."""
     for issue in range(1, latest_issue+1):
-        issue_object: Issue = Issue(issue)
-        issue_object.download(download_folder)
+        Issue(issue).download(save_path)
 
 
 if __name__ == '__main__':
+    # Initialize parser
+    parser = argparse.ArgumentParser(description=help_description)
+
+    # Adding optional argument
+    parser.add_argument('-a', '--all', help='Download all available issues', required=False)
+
+    # Add optional argument for download path
+    parser.add_argument('-p','--path', help='The path that the PDFs will be stored in once downloaded', required=False)
+
+    # Add optional argument for issue number
+    parser.add_argument('-i', '--issue', help='A single issue number to download', required=False, type=int)
+
+    # Read arguments from command line
+    args = parser.parse_args()
+
+    default_download_folder: Path = Path('MagPis')
+    download_folder: Path = Path(args.path) if args.path is not None else default_download_folder
     if not os.path.exists(download_folder):
+        print(f'\t- Directory {download_folder} does not exist - making it...')
         os.mkdir(download_folder)
+        print(f'\t- Created directory {download_folder}')
 
-    download_all()
+    issue_num: int | None = args.issue
 
-    # To download a single issue:
-    # Issue(149).download(download_folder)
+    print(f'Issue(s) to download: {issue_num if issue_num is not None else 'All'}')
+    if issue_num is None:
+        print('No issue argument was given, so downloading all issues.\n')
+        download_all(download_folder)
+    else:
+        if args.all is not None:
+            raise ArgumentError(args.all, 'Cannot determine which issues to download when -i/--issue and -a/--all are both set. Please use one or the other.')
+        else:
+            print(f'\nDownloading issue {issue_num} to path "{download_folder}"')
+            Issue(issue_num).download(download_folder)
+
+    print('\nDone!')
