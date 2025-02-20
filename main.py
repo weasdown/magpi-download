@@ -4,6 +4,7 @@ import argparse
 from argparse import ArgumentError
 
 from bs4 import BeautifulSoup
+import json  # TODO remove import if not required
 import os
 from pathlib import Path
 import requests
