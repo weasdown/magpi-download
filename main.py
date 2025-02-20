@@ -1,14 +1,16 @@
 # Program to automatically download every issue of Raspberry Pi's MagPi magazine.
 
+import argparse
+from argparse import ArgumentError
+
 from bs4 import BeautifulSoup
-import json
+import json  # TODO remove import if not required
 import os
 from pathlib import Path
 import requests
 import sys
 
-# download_folder: Path = Path(r'')
-download_folder: Path = Path(r'D:\Resources\Raspberry Pi magazines\MagPi') if sys.platform == 'win32' else Path('MagPis')
+help_description = "A Python program to download free PDFs of Raspberry Pi's MagPi magazine."
 
 class Issue:
     def __init__(self, issue_number: int):
@@ -69,39 +71,38 @@ class Issue:
         return f'https://magpi.raspberrypi.com/issues/{self.issue_number}/pdf/download'
 
 
-def latest_issue() -> int:
-    """Gets the number of the latest issue."""
-    url: str = 'https://magpi.raspberrypi.com/issues'
-    
-    # TODO refactor to use link on page that says "The MagPi issue [latest] out now!". Will mean links can be filtered earlier, so quicker to run.
-
-    # Parse HTML soup with BeautifulSoup.
-    soup = BeautifulSoup(requests.get(url).content, 'html.parser')
-
-    # Search soup for links (hrefs) that include "/issues/[issue number]" in their URL.
-    # Get all the hrefs in the page.
-    link_tags: list[BeautifulSoup.element.Tag] = soup.find_all('a')
-    print(type(link_tags[0]))
-    
-    # Remove leading "/issues/" and trailing "/pdf" from each link in which they appear, leaving just the issue number that we then make an int.
-    issue_nums: list[int] = [int(link.replace('/issues/', '').replace('/pdf', '')) for link in link_tags if link.startswith('/issues/')]
-
-    # Remove duplicate issue numbers and sort ascending
-    issue_nums: list[int] = list(set(issue_nums))
-    latest: int = issue_nums[-1]  # As the numbers are sorted ascending, the latest issue is the last one in the list.
-
-    return latest
+# TODO find the latest_issue by reading the top item at https://magpi.raspberrypi.com/issues
+latest_issue: int = 149  # as of 29/1/25
 
 
-def download_all() -> None:
+def download_all(save_path: Path) -> None:
     """Download all MagPi PDFs."""
-    for issue in range(1, latest+1):
-        Issue(issue).download(download_folder)
+    for issue in range(1, latest_issue+1):
+        Issue(issue).download(save_path)
 
 
 if __name__ == '__main__':
+    # Initialize parser
+    parser = argparse.ArgumentParser(description=help_description)
+
+    # Adding optional argument
+    parser.add_argument('-a', '--all', help='Download all available issues', required=False)
+
+    # Add optional argument for download path
+    parser.add_argument('-p','--path', help='The path that the PDFs will be stored in once downloaded', required=False)
+
+    # Add optional argument for issue number
+    parser.add_argument('-i', '--issue', help='A single issue number to download', required=False, type=int)
+
+    # Read arguments from command line
+    args = parser.parse_args()
+
+    default_download_folder: Path = Path('MagPis')
+    download_folder: Path = Path(args.path) if args.path is not None else default_download_folder
     if not os.path.exists(download_folder):
+        print(f'\t- Directory {download_folder} does not exist - making it...')
         os.mkdir(download_folder)
+        print(f'\t- Created directory {download_folder}')
 
     latest: int = latest_issue()  # TODO remove
     print(f'The latest issue is {latest}.\n')
@@ -114,3 +115,18 @@ if __name__ == '__main__':
 
     # To download only the latest issue:
     Issue(latest).download(download_folder)
+
+    issue_num: int | None = args.issue
+
+    print(f'Issue(s) to download: {issue_num if issue_num is not None else 'All'}')
+    if issue_num is None:
+        print('No issue argument was given, so downloading all issues.\n')
+        download_all(download_folder)
+    else:
+        if args.all is not None:
+            raise ArgumentError(args.all, 'Cannot determine which issues to download when -i/--issue and -a/--all are both set. Please use one or the other.')
+        else:
+            print(f'\nDownloading issue {issue_num} to path "{download_folder}"')
+            Issue(issue_num).download(download_folder)
+
+    print('\nDone!')
