@@ -80,8 +80,9 @@ def latest_issue() -> int:
 
 def download_all(save_path: Path) -> None:
     """Download all MagPi PDFs."""
-    for issue in range(1, latest+1):
-        Issue(issue).download(download_folder)
+    for issue in range(1, latest_issue+1):
+        issue_object: Issue = Issue(issue)
+        issue_object.download(save_path)
 
 
 if __name__ == '__main__':
@@ -103,6 +104,7 @@ if __name__ == '__main__':
     default_download_folder: Path = Path('MagPis')
     download_folder: Path = Path(args.path) if args.path is not None else default_download_folder
     if not os.path.exists(download_folder):
+        print(f'\t- Directory {download_folder} does not exist - making it...')
         print(f'\t- Directory {download_folder} does not exist - making it...')
         os.mkdir(download_folder)
         print(f'\t- Created directory {download_folder}')
