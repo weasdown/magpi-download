@@ -74,7 +74,7 @@ class Issue:
 # TODO find the latest_issue by reading the top item at https://magpi.raspberrypi.com/issues
 def latest_issue() -> int:
     """Gets the latest issue number."""
-    url: str = 'https://magpi.raspberrypi.com/issues'
+    url: str = 'https://magazine.raspberrypi.com/issues'
     
     # TODO refactor to use link on page that says "The MagPi issue [latest] out now!". Will mean links can be filtered earlier, so quicker to run.
 
