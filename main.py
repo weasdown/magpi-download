@@ -44,7 +44,8 @@ class Issue:
                 download_href: str = [link for link in link_hrefs if link.startswith('/downloads/')][0]
             except IndexError as ie:
                 # TODO get date that issue will be available from button that replaces "No thanks, take me to the free PDF" link if not available e.g. https://magpi.raspberrypi.com/issues/150/contributions/new
-                raise ValueError(f'No download is available for issue {self.issue_number}')
+                self.download_failed(ValueError(f'No download is available for issue {self.issue_number}'))
+                return
 
             download_url: str = Issue.root_url + download_href  # Build the PDF download URL.
             download: requests.Response = requests.get(download_url)  # Download the PDF.
@@ -56,15 +57,19 @@ class Issue:
 
         # Issue is not yet available for download
         elif status_code == 302:
-            raise NotImplementedError('Handling of a 302 status code when downloading an issue is not yet implemented.')
+            self.download_failed(NotImplementedError('Handling of a 302 status code when downloading an issue is not yet implemented.'))
 
         else:
-            print(f'\n!! Failed to download issue {self.issue_number}. Status code: {response.status_code}')
+            self.download_failed(f'\n!! Failed to download issue {self.issue_number}. Status code: {response.status_code}')
 
     @property
     def file_name(self)->str:
         """Gets the file name for this issue."""
         return f'Magpi{self.issue_number}.pdf'
+
+    def download_failed(self, exception) -> None:
+        print(f'Failed to download issue {self.issue_number}')
+        failed_downloads[self.issue_number] = exception
 
     @property
     def url(self)-> str:
@@ -145,6 +150,8 @@ if __name__ == '__main__':
     # # To download only the latest issue:
     # Issue(latest).download(download_folder)
 
+    failed_downloads: dict[int: any] = {}
+
     if issues_to_download is None:
         print('No issue argument was given, so downloading all issues.\n')
         download_all(download_folder)
@@ -159,4 +166,9 @@ if __name__ == '__main__':
                 issue: Issue = Issue(issue_num)
                 issue.download(download_folder)
 
-    print('\nDone!')
+    if failed_downloads is None:
+        print('\nDone!')
+    else:
+        print('\nThe following issues failed to download:')
+        for issue_num, reason in failed_downloads.items():
+            print(f'\t- {issue_num}: {reason}')
