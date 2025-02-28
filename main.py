@@ -76,7 +76,7 @@ def latest_issue() -> int:
     """Gets the latest issue number."""
     url: str = 'https://magazine.raspberrypi.com/issues'
     
-    # TODO refactor to use link on page that says "The MagPi issue [latest] out now!". Will mean links can be filtered earlier, so quicker to run.
+    # TODO refactor to use link on page that says 'Raspberry Pi Official Magazine issue [latest] out now!'. Will mean links can be filtered earlier, so quicker to run.
 
     # Parse HTML soup with BeautifulSoup.
     soup = BeautifulSoup(requests.get(url).content, 'html.parser')
