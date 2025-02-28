@@ -8,7 +8,7 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup, Tag
 
-help_description = "A Python program to download free PDFs of Raspberry Pi's MagPi magazine."
+help_description = "A Python program to download the free PDFs of Raspberry Pi's MagPi magazine."
 
 class Issue:
     def __init__(self, issue_number: int):
