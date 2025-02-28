@@ -124,7 +124,8 @@ if __name__ == '__main__':
         if args.all is not None:
             raise ArgumentError(args.all, 'Cannot determine which issues to download when -i/--issue and -a/--all are both set. Please use one or the other.')
         else:
+            issue: Issue = Issue(issue_num)
             print(f'\nDownloading issue {issue_num} to path "{download_folder}"')
-            Issue(issue_num).download(download_folder)
+            issue.download(download_folder)
 
     print('\nDone!')
