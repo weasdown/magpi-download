@@ -9,20 +9,25 @@
 		"version": "0.2.0",
 		"configurations": [
 			{
-				"name": "Python Debugger: Current File",
+				"name": "Python Debugger: Download all",
 				"type": "debugpy",
 				"request": "launch",
-				"program": "${file}",
+				"program": "main.py",
 				"console": "integratedTerminal"
 			},
 			{
-				"name": "Python Debugger: Current File with Arguments",
+				"name": "Python Debugger: Download specific issues to path",
 				"type": "debugpy",
 				"request": "launch",
 				"program": "${file}",
 				"console": "integratedTerminal",
 				"args": [
-					"${command:pickArgs}"
+					"-p",
+					"~/Downloads/Raspberry Pi magazines",
+					"-i",
+					"100",
+					"124",
+					"151"
 				]
 			},
 		]
