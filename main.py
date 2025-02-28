@@ -1,14 +1,12 @@
 # Program to automatically download every issue of Raspberry Pi's MagPi magazine.
 
 import argparse
-from argparse import ArgumentError
-
-from bs4 import BeautifulSoup
-import json  # TODO remove import if not required
 import os
+from argparse import ArgumentError
 from pathlib import Path
+
 import requests
-import sys
+from bs4 import BeautifulSoup
 
 help_description = "A Python program to download free PDFs of Raspberry Pi's MagPi magazine."
 
@@ -102,7 +100,7 @@ if __name__ == '__main__':
 
     issue_num: int | None = args.issue
 
-    print(f'Issue(s) to download: {issue_num if issue_num is not None else 'All'}')
+    print(f'Issue(s) to download: {issue_num if issue_num is not None else "All"}')
     if issue_num is None:
         print('No issue argument was given, so downloading all issues.\n')
         download_all(download_folder)
@@ -110,7 +108,8 @@ if __name__ == '__main__':
         if args.all is not None:
             raise ArgumentError(args.all, 'Cannot determine which issues to download when -i/--issue and -a/--all are both set. Please use one or the other.')
         else:
+            issue: Issue = Issue(issue_num)
             print(f'\nDownloading issue {issue_num} to path "{download_folder}"')
-            Issue(issue_num).download(download_folder)
+            issue.download(download_folder)
 
     print('\nDone!')
