@@ -80,7 +80,7 @@ def latest_issue() -> int:
 
     # The latest issue number is contained in the href (and text) in the following h1 heading:
     # <h1 class="o-type-display">
-	#   <a class="c-link" href="/issues/151">Raspberry Pi Official Magazine issue 151 out now!</a>
+	  #   <a class="c-link" href="/issues/151">Raspberry Pi Official Magazine issue 151 out now!</a>
     # </h1>
 
     # Get the particular heading.
@@ -122,13 +122,12 @@ if __name__ == '__main__':
     download_folder: Path = Path(args.path) if args.path is not None else default_download_folder
     if not os.path.exists(download_folder):
         print(f'\t- Directory {download_folder} does not exist - making it...')
-        print(f'\t- Directory {download_folder} does not exist - making it...')
         os.mkdir(download_folder)
         print(f'\t- Created directory {download_folder}')
 
     # TODO remove
-    latest: int = latest_issue()
-    print(f'\nThe latest issue is {latest}.\n')
+    # latest: int = latest_issue()
+    # print(f'\nThe latest issue is {latest}.\n')
 
     issues: list[int] | None = args.issue[0] if args.issue is not None else None  # Get the list of issue numbers for issues that the user wants to download.
     issues_to_download: list[int] = [int(issue_number) for issue_number in issues] if issues is not None else None
