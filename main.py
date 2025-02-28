@@ -1,12 +1,12 @@
 # Program to automatically download every issue of Raspberry Pi's MagPi magazine.
 
 import argparse
-from argparse import ArgumentError
-
-from bs4 import BeautifulSoup
 import os
+from argparse import ArgumentError
 from pathlib import Path
+
 import requests
+from bs4 import BeautifulSoup
 
 help_description = "A Python program to download free PDFs of Raspberry Pi's MagPi magazine."
 
