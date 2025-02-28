@@ -162,7 +162,7 @@ if __name__ == '__main__':
                 issue: Issue = Issue(issue_num)
                 issue.download(download_folder)
 
-    if not failed_downloads:
+    if not failed_downloads is None:
         print('\nDone!')
     else:
         print('\nThe following issues failed to download:')
