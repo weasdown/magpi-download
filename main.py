@@ -81,18 +81,11 @@ def latest_issue() -> int:
     # Parse HTML soup with BeautifulSoup.
     soup = BeautifulSoup(requests.get(url).content, 'html.parser')
 
-    # TODO remove
-    def old():
-        # Search soup for links (hrefs) that include "/issues/[issue number]" in their URL.
-        # Get all the hrefs in the page.
-        link_hrefs: list[str] = [link.get('href') for link in soup.find_all('a')]
-        
-        # Remove leading "/issues/" and trailing "/pdf" from each link in which they appear, leaving just the issue number that we then make an int.
-        issue_nums: list[int] = [int(link.replace('/issues/', '').replace('/pdf', '')) for link in link_hrefs if link.startswith('/issues/')]
-
-        # Remove duplicate issue numbers and sort ascending
-        issue_nums: list[int] = list(set(issue_nums))
-        latest: int = issue_nums[-1]  # As the numbers are sorted ascending, the latest issue is the last one in the list.
+    # The latest issue number is contained in the following tag with an h1 heading:
+    # <a class="c-link" href="/issues/151">Raspberry Pi Official Magazine issue 151 out now!</a>
+    headings = [link for link in soup.find_all('h1')]
+    latest_issue_heading: str = [str(heading.text) for heading in headings if 'Raspberry Pi Official Magazine issue ' in heading.text][0]
+    latest: int = int(latest_issue_heading.removeprefix('\nRaspberry Pi Official Magazine issue ').removesuffix(' out now!\n'))
 
     return latest
 
