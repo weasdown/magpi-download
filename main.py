@@ -6,7 +6,7 @@ from argparse import ArgumentError
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 help_description = "A Python program to download free PDFs of Raspberry Pi's MagPi magazine."
 
@@ -75,17 +75,18 @@ class Issue:
 def latest_issue() -> int:
     """Gets the latest issue number."""
     url: str = 'https://magazine.raspberrypi.com/issues'
-    
-    # TODO refactor to use link on page that says 'Raspberry Pi Official Magazine issue [latest] out now!'. Will mean links can be filtered earlier, so quicker to run.
 
     # Parse HTML soup with BeautifulSoup.
     soup = BeautifulSoup(requests.get(url).content, 'html.parser')
 
-    # The latest issue number is contained in the following tag with an h1 heading:
-    # <a class="c-link" href="/issues/151">Raspberry Pi Official Magazine issue 151 out now!</a>
+    # The latest issue number is contained in the following h1 heading:
+    # <h1 class="o-type-display">
+	#   <a class="c-link" href="/issues/151">Raspberry Pi Official Magazine issue 151 out now!</a>
+    # </h1>
     headings = [link for link in soup.find_all('h1')]
-    latest_issue_heading: str = [str(heading.text) for heading in headings if 'Raspberry Pi Official Magazine issue ' in heading.text][0]
-    latest: int = int(latest_issue_heading.removeprefix('\nRaspberry Pi Official Magazine issue ').removesuffix(' out now!\n'))
+
+    latest_issue_href: str = [heading.find('a').get('href') for heading in headings if 'Raspberry Pi Official Magazine issue ' in heading.text][0]
+    latest: int = int(latest_issue_href.removeprefix('/issues/'))
 
     return latest
 
