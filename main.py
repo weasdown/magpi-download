@@ -71,7 +71,6 @@ class Issue:
         return f'https://magpi.raspberrypi.com/issues/{self.issue_number}/pdf/download'
 
 
-# TODO find the latest_issue by reading the top item at https://magpi.raspberrypi.com/issues
 def latest_issue() -> int:
     """Gets the latest issue number."""
     url: str = 'https://magazine.raspberrypi.com/issues'
