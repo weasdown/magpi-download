@@ -14,7 +14,9 @@
                 "-p",
                 "~/Downloads/Raspberry Pi magazines",
                 "-i",
-                "100"
+                "100",
+                "124",
+                "136"
             ]
         },
         {
