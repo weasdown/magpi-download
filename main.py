@@ -11,6 +11,8 @@ from bs4 import BeautifulSoup, Tag
 help_description = "A Python program to download the free PDFs of Raspberry Pi's MagPi magazine."
 
 class Issue:
+    root_url: str = 'https://magazine.raspberrypi.com'
+
     def __init__(self, issue_number: int):
         """An individual issue of the MagPi magazine."""
         self.issue_number: int = issue_number
@@ -26,8 +28,6 @@ class Issue:
         """
 
         print(f'\nDownloading issue {self.issue_number}')
-
-        magpi_root_url: str = 'https://magpi.raspberrypi.com'
 
         response: requests.Response = requests.get(self.url)
 
@@ -45,7 +45,7 @@ class Issue:
                 # TODO get date that issue will be available from button that replaces "No thanks, take me to the free PDF" link if not available e.g. https://magpi.raspberrypi.com/issues/150/contributions/new
                 raise ValueError(f'No download is available for issue {self.issue_number}')
 
-            download_url: str = magpi_root_url + download_href  # Build the PDF download URL.
+            download_url: str = Issue.root_url + download_href  # Build the PDF download URL.
             download: requests.Response = requests.get(download_url)  # Download the PDF.
 
             # Save the PDF to a file
@@ -73,10 +73,8 @@ class Issue:
 
 def latest_issue() -> int:
     """Gets the latest issue number."""
-    url: str = 'https://magazine.raspberrypi.com/issues'
-
     # Parse HTML soup with BeautifulSoup.
-    soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+    soup = BeautifulSoup(requests.get(f'{Issue.root_url}/issues').content, 'html.parser')
 
     # The latest issue number is contained in the href (and text) in the following h1 heading:
     # <h1 class="o-type-display">
