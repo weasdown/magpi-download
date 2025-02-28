@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Specific issues to Downloads/Raspberry Pi magazines",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "args": [
+                "-p",
+                "~/Downloads/Raspberry Pi magazines",
+                "-i",
+                "100",
+                "124",
+                "136"
+            ]
+        },
+        {
+            "name": "Python Debugger: Download all to default directory",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal"
+        },
+    ]
+}

@@ -1,13 +1,14 @@
 # Program to automatically download every issue of Raspberry Pi's MagPi magazine.
 
-from bs4 import BeautifulSoup
-import json
+import argparse
 import os
+from argparse import ArgumentError
 from pathlib import Path
+
 import requests
+from bs4 import BeautifulSoup, Tag
 
-download_folder: Path = Path(r'D:\Resources\Raspberry Pi magazines\MagPi')
-
+help_description = "A Python program to download the free PDFs of Raspberry Pi's MagPi magazine."
 
 class Issue:
     def __init__(self, issue_number: int):
@@ -24,6 +25,8 @@ class Issue:
         :rtype: NoneType
         """
 
+        print(f'\nDownloading issue {self.issue_number}')
+
         magpi_root_url: str = 'https://magpi.raspberrypi.com'
 
         response: requests.Response = requests.get(self.url)
@@ -33,10 +36,14 @@ class Issue:
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # Get all the hrefs in the page.
-            link_hrefs: list[str]  = [link.get('href') for link in soup.find_all('a')]
+            link_hrefs: list[str] = [link.get('href') for link in soup.find_all('a')]
 
             # Get the href to download the PDF.
-            download_href: str = [link for link in link_hrefs if link.startswith('/downloads/')][0]
+            try:
+                download_href: str = [link for link in link_hrefs if link.startswith('/downloads/')][0]
+            except IndexError as ie:
+                # TODO get date that issue will be available from button that replaces "No thanks, take me to the free PDF" link if not available e.g. https://magpi.raspberrypi.com/issues/150/contributions/new
+                raise ValueError(f'No download is available for issue {self.issue_number}')
 
             download_url: str = magpi_root_url + download_href  # Build the PDF download URL.
             download: requests.Response = requests.get(download_url)  # Download the PDF.
@@ -64,19 +71,88 @@ class Issue:
         return f'https://magpi.raspberrypi.com/issues/{self.issue_number}/pdf/download'
 
 
-# TODO find the latest_issue by reading the top item at https://magpi.raspberrypi.com/issues
-latest_issue: int = 149  # as of 29/1/25
+def latest_issue() -> int:
+    """Gets the latest issue number."""
+    url: str = 'https://magazine.raspberrypi.com/issues'
+
+    # Parse HTML soup with BeautifulSoup.
+    soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+
+    # The latest issue number is contained in the href (and text) in the following h1 heading:
+    # <h1 class="o-type-display">
+	  #   <a class="c-link" href="/issues/151">Raspberry Pi Official Magazine issue 151 out now!</a>
+    # </h1>
+
+    # Get the particular heading.
+    heading: Tag = [heading for heading in soup.find_all('h1') if 'Raspberry Pi Official Magazine issue ' in heading.text][0]
+    
+    # Extract the heading's href
+    latest_issue_href: str = heading.find('a').get('href')
+    
+    # Extract the latest issue number from the href
+    latest: int = int(latest_issue_href.removeprefix('/issues/'))
+
+    return latest
 
 
-def download_all() -> None:
+def download_all(save_path: Path) -> None:
     """Download all MagPi PDFs."""
     for issue in range(1, latest_issue+1):
         issue_object: Issue = Issue(issue)
-        issue_object.download(download_folder)
+        issue_object.download(save_path)
 
 
 if __name__ == '__main__':
-    download_all()
+    # Initialize parser
+    parser = argparse.ArgumentParser(description=help_description)
 
-    # To download a single issue:
+    # Adding optional argument
+    parser.add_argument('-a', '--all', help='Download all available issues', required=False)
+
+    # Add optional argument for download path
+    parser.add_argument('-p','--path', help='The path that the PDFs will be stored in once downloaded', required=False)
+
+    # Add optional argument for issue number
+    parser.add_argument('-i', '--issue', help='A single issue number to download', required=False, type=int, action='append', nargs='+')
+
+    # Read arguments from command line
+    args = parser.parse_args()
+
+    default_download_folder: Path = Path('MagPis')
+    download_folder: Path = Path(args.path) if args.path is not None else default_download_folder
+    if not os.path.exists(download_folder):
+        print(f'\t- Directory {download_folder} does not exist - making it...')
+        os.mkdir(download_folder)
+        print(f'\t- Created directory {download_folder}')
+
+    # TODO remove
+    # latest: int = latest_issue()
+    # print(f'\nThe latest issue is {latest}.\n')
+
+    issues: list[int] | None = args.issue[0] if args.issue is not None else None  # Get the list of issue numbers for issues that the user wants to download.
+    issues_to_download: list[int] = [int(issue_number) for issue_number in issues] if issues is not None else None
+
+    # # To download all issues:
+    # download_all()
+
+    # # To download a single issue, where 149 is the issue number:
     # Issue(149).download(download_folder)
+
+    # # To download only the latest issue:
+    # Issue(latest).download(download_folder)
+
+    if issues_to_download is None:
+        print('No issue argument was given, so downloading all issues.\n')
+        download_all(download_folder)
+    else:
+        if args.all is not None:
+            raise ArgumentError(args.all, 'Cannot determine which issues to download when -i/--issue and -a/--all are both set. Please use one or the other.')
+        else:
+            issues_to_download_text: str = '\n'.join([f'\t- {issue}' for issue in issues_to_download]) if issues_to_download is not None else "All"
+            print(f'Issue(s) to download:\n{issues_to_download_text}\n')
+            print(f'Downloading to path: {download_folder}')
+            for issue_num in issues_to_download:
+                issue: Issue = Issue(issue_num)
+                issue.download(download_folder)
+
+    print('\nDone!')
