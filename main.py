@@ -74,7 +74,24 @@ class Issue:
 # TODO find the latest_issue by reading the top item at https://magpi.raspberrypi.com/issues
 def latest_issue() -> int:
     """Gets the latest issue number."""
-    latest: int = 149  # as of 29/1/25
+    url: str = 'https://magpi.raspberrypi.com/issues'
+    
+    # TODO refactor to use link on page that says "The MagPi issue [latest] out now!". Will mean links can be filtered earlier, so quicker to run.
+
+    # Parse HTML soup with BeautifulSoup.
+    soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+
+    # Search soup for links (hrefs) that include "/issues/[issue number]" in their URL.
+    # Get all the hrefs in the page.
+    link_hrefs: list[str] = [link.get('href') for link in soup.find_all('a')]
+    
+    # Remove leading "/issues/" and trailing "/pdf" from each link in which they appear, leaving just the issue number that we then make an int.
+    issue_nums: list[int] = [int(link.replace('/issues/', '').replace('/pdf', '')) for link in link_hrefs if link.startswith('/issues/')]
+
+    # Remove duplicate issue numbers and sort ascending
+    issue_nums: list[int] = list(set(issue_nums))
+    latest: int = issue_nums[-1]  # As the numbers are sorted ascending, the latest issue is the last one in the list.
+
     return latest
 
 
