@@ -25,6 +25,8 @@ class Issue:
         :rtype: NoneType
         """
 
+        print(f'\nDownloading issue {self.issue_number}')
+
         magpi_root_url: str = 'https://magpi.raspberrypi.com'
 
         response: requests.Response = requests.get(self.url)
@@ -93,7 +95,7 @@ if __name__ == '__main__':
     parser.add_argument('-p','--path', help='The path that the PDFs will be stored in once downloaded', required=False)
 
     # Add optional argument for issue number
-    parser.add_argument('-i', '--issue', help='A single issue number to download', required=False, type=int)
+    parser.add_argument('-i', '--issue', help='A single issue number to download', required=False, type=int, action='append', nargs='+')
 
     # Read arguments from command line
     args = parser.parse_args()
@@ -105,30 +107,34 @@ if __name__ == '__main__':
         os.mkdir(download_folder)
         print(f'\t- Created directory {download_folder}')
 
-    latest: int = latest_issue()  # TODO remove
-    print(f'The latest issue is {latest}.\n')
+    # TODO remove
+    latest: int = latest_issue()
+    print(f'\nThe latest issue is {latest}.\n')
 
-    # To download all issues:
+    issues: list[int] | None = args.issue[0] if args.issue is not None else None  # Get the list of issue numbers for issues that the user wants to download.
+    issues_to_download: list[int] = [int(issue_number) for issue_number in issues] + [latest] if issues is not None else None
+
+    # # To download all issues:
     # download_all()
 
-    # To download a single issue, where 149 is the issue number:
+    # # To download a single issue, where 149 is the issue number:
     # Issue(149).download(download_folder)
 
-    # To download only the latest issue:
-    Issue(latest).download(download_folder)
+    # # To download only the latest issue:
+    # Issue(latest).download(download_folder)
 
-    issue_num: int | None = args.issue
-
-    print(f'Issue(s) to download: {issue_num if issue_num is not None else "All"}')
-    if issue_num is None:
+    if issues_to_download is None:
         print('No issue argument was given, so downloading all issues.\n')
         download_all(download_folder)
     else:
         if args.all is not None:
             raise ArgumentError(args.all, 'Cannot determine which issues to download when -i/--issue and -a/--all are both set. Please use one or the other.')
         else:
-            issue: Issue = Issue(issue_num)
-            print(f'\nDownloading issue {issue_num} to path "{download_folder}"')
-            issue.download(download_folder)
+            issues_to_download_text: str = '\n'.join([f'\t- {issue}' for issue in issues_to_download]) if issues_to_download is not None else "All"
+            print(f'Issue(s) to download:\n{issues_to_download_text}\n')
+            print(f'Downloading to path: {download_folder}')
+            for issue_num in issues_to_download:
+                issue: Issue = Issue(issue_num)
+                issue.download(download_folder)
 
     print('\nDone!')
