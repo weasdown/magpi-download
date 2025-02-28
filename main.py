@@ -4,11 +4,9 @@ import argparse
 from argparse import ArgumentError
 
 from bs4 import BeautifulSoup
-import json  # TODO remove import if not required
 import os
 from pathlib import Path
 import requests
-import sys
 
 help_description = "A Python program to download free PDFs of Raspberry Pi's MagPi magazine."
 
@@ -118,7 +116,7 @@ if __name__ == '__main__':
 
     issue_num: int | None = args.issue
 
-    print(f'Issue(s) to download: {issue_num if issue_num is not None else 'All'}')
+    print(f'Issue(s) to download: {issue_num if issue_num is not None else "All"}')
     if issue_num is None:
         print('No issue argument was given, so downloading all issues.\n')
         download_all(download_folder)
