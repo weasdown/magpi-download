@@ -1,0 +1,16 @@
+Raspberry Pi download URLs:
+
+Example:
+https://magazine.raspberrypi.com/downloads/eyJfcmFpbHMiOnsiZGF0YSI6Nzk3NCwicHVyIjoiYmxvYl9pZCJ9fQ==--23a52f4264822059d97a48510fc6dd77b9af7408/MagPi124.pdf
+
+root: https://magazine.raspberrypi.com/downloads/
+- leaves: eyJfcmFpbHMiOnsiZGF0YSI6Nzk3NCwicHVyIjoiYmxvYl9pZCJ9fQ==--23a52f4264822059d97a48510fc6dd77b9af7408/MagPi124.pdf
+
+
+"eyJfcmFpbHMiOnsiZGF0YSI6MTE0NSwicHVyIjoiYmxvYl9pZCJ9fQ==--" part is consistent across issues.
+Removing the trailing "--" gives a valid Base64 value that decodes to: "{"_rails":{"data":1145,"pur":"blob_id"}}"
+So the full URL is so far equivalent to: https://magazine.raspberrypi.com/downloads/{"_rails":{"data":1145,"pur":"blob_id"}}--23a52f4264822059d97a48510fc6dd77b9af7408/MagPi124.pdf
+Or as a valid URL: https://magazine.raspberrypi.com/downloads/%7B%22_rails%22:%7B%22data%22:1145,%22pur%22:%22blob_id%22%7D%7D--23a52f4264822059d97a48510fc6dd77b9af7408/MagPi124.pdf
+
+The part after "==" is issue-specific. For example, for issue 124, it is:
+"--23a52f4264822059d97a48510fc6dd77b9af7408/MagPi124.pdf"
