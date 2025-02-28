@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Issue 100 to Downloads/Raspberry Pi magazines",
+            "name": "Python Debugger: Specific issues to Downloads/Raspberry Pi magazines",
             "type": "debugpy",
             "request": "launch",
             "program": "main.py",
