@@ -67,10 +67,6 @@ class Issue:
         """Gets the file name for this issue."""
         return f'Magpi{self.issue_number}.pdf'
 
-    def download_failed(self, exception) -> None:
-        print(f'Failed to download issue {self.issue_number}')
-        failed_downloads[self.issue_number] = exception
-
     @property
     def url(self)-> str:
         """
