@@ -144,7 +144,7 @@ if __name__ == '__main__':
     # # To download only the latest issue:
     # Issue(latest).download(download_folder)
 
-    print(f'Downloading to path: {download_folder}')
+    print(f'\nDownloading to path: {download_folder}\n')
     if issues_to_download is None:
         print('No issue argument was given, so downloading all issues.\n')
         download_all(download_folder)
