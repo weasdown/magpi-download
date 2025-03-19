@@ -128,10 +128,6 @@ if __name__ == '__main__':
         os.mkdir(download_folder)
         print(f'\t- Created directory {download_folder}')
 
-    # TODO remove
-    # latest: int = latest_issue()
-    # print(f'\nThe latest issue is {latest}.\n')
-
     issues: list[int] | None = args.issue[0] if args.issue is not None else None  # Get the list of issue numbers for issues that the user wants to download.
     issues_to_download: list[int] = [int(issue_number) for issue_number in issues] if issues is not None else None
 
