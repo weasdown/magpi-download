@@ -30,8 +30,9 @@ class Issue:
         magpi_root_url: str = 'https://magpi.raspberrypi.com'
 
         response: requests.Response = requests.get(self.url)
+        status_code: int = response.status_code
 
-        if response.status_code == 200:
+        if status_code == 200:
             # Parse HTML soup with BeautifulSoup.
             soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -52,6 +53,8 @@ class Issue:
             with open(os.path.join(save_folder, self.file_name), 'wb') as file:
                 file.write(download.content)
             print(f'Issue {self.issue_number} downloaded successfully')
+        elif status_code == 429:
+            raise RuntimeError('This device has been blocked by the server for sending too many requests. Please try again in a few minutes.')
         else:
             print(f'\n!! Failed to download issue {self.issue_number}. Status code: {response.status_code}')
 
