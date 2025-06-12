@@ -39,15 +39,18 @@ class Issue:
             # Get all the hrefs in the page.
             link_hrefs: list[str] = [link.get('href') for link in soup.find_all('a')]
 
+            # print(f'{link_hrefs = }')
             # Get the href to download the PDF.
             try:
                 download_href: str = [link for link in link_hrefs if link.startswith('/downloads/')][0]
+                print(f'{download_href = }')
             except IndexError as ie:
                 # TODO get date that issue will be available from button that replaces "No thanks, take me to the free PDF" link if not available e.g. https://magpi.raspberrypi.com/issues/150/contributions/new
                 self.download_failed(ValueError(f'No download is available for issue {self.issue_number}'))
                 return
 
             download_url: str = Issue.root_url + download_href  # Build the PDF download URL.
+            print(f'{download_url = }')
             download: requests.Response = requests.get(download_url)  # Download the PDF.
 
             # Save the PDF to a file
@@ -61,6 +64,10 @@ class Issue:
 
         else:
             self.download_failed(f'\n!! Failed to download issue {self.issue_number}. Status code: {response.status_code}')
+
+    def download_failed(self, exception) -> None:
+        print(f'Failed to download issue {self.issue_number}')
+        failed_downloads[self.issue_number] = exception
 
     @property
     def file_name(self)->str:
